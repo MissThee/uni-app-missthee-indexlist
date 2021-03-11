@@ -7,21 +7,20 @@
 		<scroll-view :scroll-y='true'
 			:scroll-into-view='"list-archor-" + encodeURIComponent(this.currentActiveIndex).replace("%", "_")'
 			class='index-list__scroller'>
-			<div v-for='groupKey in Object.keys(listDataFiltered)' :key='groupKey'>
+			<div v-for='groupKey in Object.keys(dataFiltered)' :key='groupKey'>
 				<div class="index-list__group-head" :id='"list-archor-"+ encodeURIComponent(groupKey).replace("%","_")'>
 					{{groupKey}}
 				</div>
-				<div class="index-list__group-cell" v-for='city in listDataFiltered[groupKey]'
+				<div class="index-list__group-cell" v-for='city in dataFiltered[groupKey]'
 					@click="()=>{cityClickHandler(city)}" :clickable='true' :key="city.id">{{city.name}}
 				</div>
 			</div>
 			<div style='height: 45px;width: 100%;'></div>
 		</scroll-view>
-		<view v-if='listDataFiltered&&Object.keys(listDataFiltered).length>0' class='index-list__index'
+		<view v-if='dataFiltered&&Object.keys(dataFiltered).length>0' class='index-list__index'
 			@touchmove="indexTouchMoveHandler" @touchstart="indexTouchMoveHandler" @touchend="isZoomActiveIndex=false">
 			<div class='index-list__index__wrapper'>
-				<div v-for='groupKey in Object.keys(listDataFiltered)' :key='groupKey'
-					class='index-list__index__letter'
+				<div v-for='groupKey in Object.keys(dataFiltered)' :key='groupKey' class='index-list__index__letter'
 					:class='{"index-list__index__letter--active":currentActiveIndex===groupKey&&isZoomActiveIndex}'>
 					{{groupKey}}
 				</div>
@@ -34,14 +33,14 @@
 	export default {
 		name: "missthee-indexlist",
 		props: {
-			listData: {
+			data: {
 				type: Object,
-				default: {},
+				default: {}
 			}
 		},
 		data() {
 			return {
-				listDataFiltered: {},
+				dataFiltered: {},
 				currentActiveIndex: '',
 				isZoomActiveIndex: false,
 				citySearch: '',
@@ -51,18 +50,17 @@
 			citySearch: {
 				immediate: true,
 				handler(newVal) {
-					if (!this.listData) {
+					if (!this.data) {
 						return {}
 					}
 					const resultObj = {}
-					for (const groupkey of Object.keys(this.listData)) {
-						const cityListResult = this.listData[groupkey].filter(item => item.name.indexOf(newVal) >=
-							0)
+					for (const groupkey of Object.keys(this.data)) {
+						const cityListResult = this.data[groupkey].filter(item => item.name.indexOf(newVal) >= 0)
 						if (cityListResult && cityListResult.length > 0) {
 							resultObj[groupkey] = cityListResult
 						}
 					}
-					this.listDataFiltered = resultObj
+					this.dataFiltered = resultObj
 				}
 			}
 		},
@@ -71,13 +69,10 @@
 				this.isZoomActiveIndex = true
 				const touch = e.touches[0];
 				const target = e.target
-				// console.log('触摸',touch.pageY, touch.clientY ,target.offsetTop, Object.keys(this.listDataFiltered).length * 15 / 2)
-				let currentIndex = Math.floor((touch.clientY + Object.keys(this.listDataFiltered).length *
-					15 / 2 - target.offsetTop) / 15)
-				currentIndex = Math.min(Object.keys(this.listDataFiltered).length - 1, currentIndex)
+				let currentIndex = Math.floor((touch.clientY + Object.keys(this.dataFiltered).length * 15 / 2 - target.offsetTop) / 15)
+				currentIndex = Math.min(Object.keys(this.dataFiltered).length - 1, currentIndex)
 				currentIndex = Math.max(0, currentIndex)
-				// console.log('触摸', Object.keys(this.listDataFiltered)[currentIndex]) 
-				this.currentActiveIndex = Object.keys(this.listDataFiltered)[currentIndex]
+				this.currentActiveIndex = Object.keys(this.dataFiltered)[currentIndex]
 			},
 			cityClickHandler(item) {
 				this.$emit('select-item', item)
@@ -86,7 +81,7 @@
 	}
 </script>
 
-<style lang='scss' scoped> 
+<style lang='scss' scoped>
 	* {
 		font-family: Consolas, sans-serif;
 		box-sizing: border-box !important;
