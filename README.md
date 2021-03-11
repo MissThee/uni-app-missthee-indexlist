@@ -3,7 +3,7 @@
 ### 使用
 ```
 <template>
-	<missthee-indexlist @select-item='selectHandler' :listData="listData"></missthee-indexlist>
+  <missthee-indexlist :listData="listData" @select-item='selectHandler'></missthee-indexlist>
 </template>
 
 <script>
@@ -137,8 +137,13 @@
   }
 </script>
 ````
-|属性|说明|
+|属性|默认值|说明|
+|:---:|:---:|:---:|
+|data|{}|绑定列表数据|
+|placeholder|输入关键字查询|顶部查询框placeholder|
+|useIndex|true|启用右侧索引|
+
+|事件|说明|
 |:---:|:---:|
-|data|绑定列表数据|
 |select-item|点击列表内容触发，返回选中的对象|
 

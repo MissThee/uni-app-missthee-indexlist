@@ -1,7 +1,7 @@
 <template>
 	<view class='index-list'>
 		<view class='index-list__head'>
-			<input v-model="citySearch" placeholder="输入城市名称查询" class="index-list__input"
+			<input v-model="citySearch" :placeholder='placeholder' class="index-list__input"
 				placeholder-class="index-list__input__placeholder" />
 		</view>
 		<scroll-view :scroll-y='true'
@@ -17,7 +17,7 @@
 			</div>
 			<div style='height: 45px;width: 100%;'></div>
 		</scroll-view>
-		<view v-if='dataFiltered&&Object.keys(dataFiltered).length>0' class='index-list__index'
+		<view v-if='useIndex&&dataFiltered&&Object.keys(dataFiltered).length>0' class='index-list__index'
 			@touchmove="indexTouchMoveHandler" @touchstart="indexTouchMoveHandler" @touchend="isZoomActiveIndex=false">
 			<div class='index-list__index__wrapper'>
 				<div v-for='groupKey in Object.keys(dataFiltered)' :key='groupKey' class='index-list__index__letter'
@@ -36,7 +36,15 @@
 			data: {
 				type: Object,
 				default: {}
-			}
+			},
+			placeholder: {
+				type: String,
+				default: '输入关键字查询'
+			},
+			useIndex: {
+				type: Boolean,
+				default: true
+			},
 		},
 		data() {
 			return {
@@ -69,7 +77,8 @@
 				this.isZoomActiveIndex = true
 				const touch = e.touches[0];
 				const target = e.target
-				let currentIndex = Math.floor((touch.clientY + Object.keys(this.dataFiltered).length * 15 / 2 - target.offsetTop) / 15)
+				let currentIndex = Math.floor((touch.clientY + Object.keys(this.dataFiltered).length * 15 / 2 - target
+					.offsetTop) / 15)
 				currentIndex = Math.min(Object.keys(this.dataFiltered).length - 1, currentIndex)
 				currentIndex = Math.max(0, currentIndex)
 				this.currentActiveIndex = Object.keys(this.dataFiltered)[currentIndex]
