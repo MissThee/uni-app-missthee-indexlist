@@ -123,6 +123,36 @@
 				}
 			}
 		},
+		created() {
+			for (let i = 0; i < 20000; i++) {
+				this.listData.A.push({
+					id: 1000 + i,
+					name: "A市" + i,
+				})
+			}
+			// setTimeout(()=> {
+			// 	this.listData={
+			// 		"A": [{
+			// 			id: 1, //城市id，作为v-for的key使用
+			// 			name: "A市", //城市名称，作为显示字段
+			// 		}, ],
+			// 		"B": [{
+			// 				id: 2,
+			// 				name: "B市",
+			// 			},
+			// 			{
+			// 				id: 3,
+			// 				name: "B1市",
+			// 			},
+			// 			{
+			// 				id: 4,
+			// 				name: "B2市",
+			// 			},
+			// 		],
+			// 	}
+			// }, 10000);
+
+		},
 		methods: {
 			selectHandler(e) {
 				console.log('test', e) // 选中的城市对象 {id:1 , name: "A市"}
