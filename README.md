@@ -1,19 +1,22 @@
 # uni-app 索引列表
+一个简单的带索引列表
 
 ### 使用
 ```
 <template>
-  <missthee-indexlist :listData="listData" @select-item='selectHandler'></missthee-indexlist>
+  <missthee-indexlist :listData="listData" :isBigData='enableBigData' @select-item='selectHandler'></missthee-indexlist>
 </template>
 
 <script>
   export default {
     data() {
       return {
+		enableBigData: true, //是否开启大数据渲染，如果开启会插入20000条测试数据到表格，方法在create中
         listData: {
           "A": [{
-            id: 1,  //城市id，作为v-for的key使用
-            name: "A市",  //名称，作为显示字段
+            id: 1,  //[必须]id，作为v-for的key使用
+            name: "A市",  //[必须]名称，作为显示字段
+			customParam: "自定义属性" //可以额外添加任意的自定义属性，返回结果中会包含这些属性
           },],
           "B": [{
             id: 2,
@@ -129,9 +132,19 @@
         }
       }
     },
+    created() {
+      if(this.enableBigData){ // 开启大数据插入20000条测试数据
+        for (let i = 0; i < 20000; i++) {
+          this.listData.A.push({
+            id: 1000 + i,
+            name: "A市" + i,
+          })
+        }
+      }
+    },
     methods: {
       selectHandler(e) {
-        console.log('选中城市', e) // 返回选中对象 {id: 1, name: "A市"}
+        console.log('选中城市', e) // 返回选中对象 {id: 1, name: "A市", customParam: "自定义属性"}
       }
     }
   }
@@ -141,7 +154,8 @@
 |:---:|:---:|:---:|
 |data|{}|绑定列表数据|
 |placeholder|输入关键字查询|顶部查询框placeholder|
-|useIndex|true|启用右侧索引|
+|useIndex|true|启用右侧索引（默认启用，关闭需设置:useIndex='false'）|
+|isBigData|false|启动表格大数据动态渲染（默认不启用，打开需设置isBigData或:isBigData='true'）|
 
 |事件|说明|
 |:---:|:---:|
