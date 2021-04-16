@@ -100,7 +100,7 @@
 				currentActiveIndex: '',
 				isZoomActiveIndex: false,
 				citySearch: '',
-
+				citySeatchDebounce: null,
 				bigDataFilteredLineHeightTotal: 0,
 				bigDataFiltered: {},
 				bigDataFilteredFlatWithLineInfo: [],
@@ -136,7 +136,14 @@
 				}
 			},
 			citySearch() {
-				this.buildDataFiltered()
+				if(this.citySeatchDebounce){
+					clearTimeout(this.citySeatchDebounce)
+					this.citySeatchDebounce = null
+				}
+				this.citySeatchDebounce=setTimeout(()=>{
+					this.buildDataFiltered()
+				}, 200)
+				
 			},
 			dataFiltered: {
 				deep: true,
@@ -160,7 +167,8 @@
 				this.bigDataScrollAminate()
 			}
 		},
-		beforeDestroy(){
+		beforeDestroy() {
+			this.bigDataClearScrollAnimate()
 			this.bigDataRemoveEvent()
 		},
 		methods: {
@@ -218,17 +226,17 @@
 				this.bigDataTableDataPanelEl.addEventListener('touchstart', this.bigDataTouchStartEvent);
 				this.bigDataTableDataPanelEl.addEventListener('touchend', this.bigDataTouchEndEvent);
 			},
-			bigDataRemoveEvent(){
+			bigDataRemoveEvent() {
 				this.bigDataTableDataPanelEl.removeEventListener('mousewheel', this.bigDataScrollEvent);
 				this.bigDataTableDataPanelEl.removeEventListener('touchmove', this.bigDataScrollEvent);
 				this.bigDataTableDataPanelEl.removeEventListener('touchstart', this.bigDataTouchStartEvent);
 				this.bigDataTableDataPanelEl.removeEventListener('touchend', this.bigDataTouchEndEvent);
 			},
-			bigDataTouchStartEvent(e){
+			bigDataTouchStartEvent(e) {
 				this.bigDataScrollActionParam.isMouseDown = true
-				this.bigDataScrollActionParam.speed=0
+				this.bigDataScrollActionParam.speed = 0
 			},
-			bigDataTouchEndEvent(e){
+			bigDataTouchEndEvent(e) {
 				this.bigDataScrollActionParam.isMouseDown = false
 				this.bigDataScrollActionParam.prePositionY = null
 			},
@@ -327,9 +335,11 @@
 					//遍历数据，插入窗口中可见的数据行
 					let startIndex = null
 					let endIndex = null
-					
-					for (let i =parseInt( this.bigDataComputedParam.dataRowTop/Math.max(this.bigDataParam.dataRowHeight,this.bigDataParam.dataHeadHeight),10)-1; i < this.bigDataFilteredFlatWithLineInfo.length; i++) {
-						if(i<0){
+
+					for (let i = parseInt(this.bigDataComputedParam.dataRowTop / Math.max(this.bigDataParam.dataRowHeight,
+							this.bigDataParam.dataHeadHeight), 10) - 1; i < this.bigDataFilteredFlatWithLineInfo
+						.length; i++) {
+						if (i < 0) {
 							continue
 						}
 						const totalHeight = this.bigDataFilteredFlatWithLineInfo[i].__line_info__.totalHeight
@@ -359,7 +369,7 @@
 				}
 			},
 			bigDataScrollAminate() {
-				this.timeoutObj = setInterval(() => {
+				this.bigDataScrollActionParam.timeoutObj = setInterval(() => {
 					if (Math.abs(this.bigDataScrollActionParam.speed) > 0 && !this.bigDataScrollActionParam
 						.isMouseDown) {
 						this.bigDataScrollActionParam.speed = (this.bigDataScrollActionParam.speed >= 0 ? 1 : -1) *
@@ -370,6 +380,12 @@
 						this.bigDataUpdateRows()
 					}
 				}, 16)
+			},
+			bigDataClearScrollAnimate() {
+				if (this.bigDataScrollActionParam.timeoutObj) {
+					clearInterval(this.bigDataScrollActionParam.timeoutObj)
+					this.bigDataScrollActionParam.timeoutObj = null
+				}
 			}
 		}
 	}

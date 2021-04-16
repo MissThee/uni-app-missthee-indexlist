@@ -124,10 +124,16 @@
 			}
 		},
 		created() {
-			for (let i = 0; i < 20000; i++) {
+			for (let i = 0; i < 50000; i++) {
 				this.listData.A.push({
 					id: 1000 + i,
 					name: "A市" + i,
+				})
+			}
+			for (let i = 0; i < 20000; i++) {
+				this.listData.B.push({
+					id: 1000 + i,
+					name: "B市" + i,
 				})
 			}
 			// setTimeout(()=> {
