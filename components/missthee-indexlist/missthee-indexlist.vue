@@ -90,7 +90,7 @@
 			isBigData: {
 				type: Boolean,
 				default: function() {
-					return true
+					return false
 				}
 			},
 		},
@@ -143,7 +143,6 @@
 				this.citySeatchDebounce=setTimeout(()=>{
 					this.buildDataFiltered()
 				}, 200)
-				
 			},
 			dataFiltered: {
 				deep: true,
@@ -168,8 +167,10 @@
 			}
 		},
 		beforeDestroy() {
-			this.bigDataClearScrollAnimate()
-			this.bigDataRemoveEvent()
+			if (this.isBigData) {
+				this.bigDataClearScrollAnimate()
+				this.bigDataRemoveEvent()
+			}
 		},
 		methods: {
 			indexTouchMoveHandler(e) {

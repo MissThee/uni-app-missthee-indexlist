@@ -1,5 +1,5 @@
 <template>
-	<missthee-indexlist @select-item='selectHandler' :data="listData"></missthee-indexlist>
+	<missthee-indexlist @select-item='selectHandler' isBigData :data="listData"></missthee-indexlist>
 </template>
 
 <script>
@@ -130,12 +130,12 @@
 					name: "A市" + i,
 				})
 			}
-			for (let i = 0; i < 20000; i++) {
-				this.listData.B.push({
-					id: 1000 + i,
-					name: "B市" + i,
-				})
-			}
+			// for (let i = 0; i < 20000; i++) {
+			// 	this.listData.B.push({
+			// 		id: 1000 + i,
+			// 		name: "B市" + i,
+			// 	})
+			// }
 			// setTimeout(()=> {
 			// 	this.listData={
 			// 		"A": [{
