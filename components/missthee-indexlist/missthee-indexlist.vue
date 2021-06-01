@@ -176,7 +176,7 @@
 			indexTouchMoveHandler(e) {
 				this.isZoomActiveIndex = true
 				const touch = e.touches[0];
-				const target = e.target
+				const target = e.currentTarget || e.target
 				let currentIndex = Math.floor((touch.clientY + Object.keys(this.dataFiltered).length * 15 / 2 -
 					target.offsetTop) / 15)
 				currentIndex = Math.min(Object.keys(this.dataFiltered).length - 1, currentIndex)
@@ -192,8 +192,10 @@
 						this.bigDataUpdateRows()
 					}
 				}
-				event.preventDefault()
-				event.stopPropagation()
+				if("undefined" !== typeof event){
+					event.preventDefault()
+					event.stopPropagation()
+				}
 			},
 			itemClickHandler(item) {
 				let result = {
